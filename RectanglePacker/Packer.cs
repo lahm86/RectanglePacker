@@ -6,9 +6,10 @@ namespace RectanglePacker
     public class Packer<R> where R : class, IRectangle
     {
         private List<Tile<R>> _tiles;
-        private readonly List<R> _rectangles;
+        private readonly List<R> _rectangles, _orphanedRectangles;
 
         public int TotalRectangles => _rectangles.Count;
+        public int TotalTiles => _tiles == null ? 0 : _tiles.Count;
         public int MaximumTiles { get; set; }
         public int TileWidth { get; set; }
         public int TileHeight { get; set; }
@@ -18,12 +19,14 @@ namespace RectanglePacker
         public PackingOrder Order { get; set; }
 
         public IReadOnlyList<Tile<R>> Tiles => _tiles;
+        public IReadOnlyList<R> OrphanedRectangles => _orphanedRectangles;
 
         public event EventHandler<RectanglePositionEventArgs<R>> RectanglePositioned;
 
         public Packer()
         {
             _rectangles = new List<R>();
+            _orphanedRectangles = new List<R>();
             MaximumTiles = 0;
             TileWidth = 0;
             TileHeight = 0;
@@ -72,12 +75,13 @@ namespace RectanglePacker
             SortRectangles();
 
             _tiles = new List<Tile<R>>(MaximumTiles);
+            _orphanedRectangles.Clear();
 
             foreach (R r in _rectangles)
             {
                 if (!Pack(r))
                 {
-                    throw new Exception();
+                    _orphanedRectangles.Add(r);
                 }
             }
 

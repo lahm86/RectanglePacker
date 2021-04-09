@@ -1,17 +1,6 @@
-﻿using RectanglePackerWindow.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RectanglePackerWindow.Model;
+using RectanglePackerWindow.Utilities;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace RectanglePackerWindow.Windows
 {
@@ -20,6 +9,8 @@ namespace RectanglePackerWindow.Windows
     /// </summary>
     public partial class RectangleGeneratorWindow : Window
     {
+        public UIRectangleProvider RectangleProvider { get; private set; }
+
         public RectangleGeneratorWindow()
         {
             InitializeComponent();
@@ -29,6 +20,21 @@ namespace RectanglePackerWindow.Windows
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             WindowUtils.TidyMenu(this);
+        }
+
+        private void OkButton_Click(object sender, RoutedEventArgs e)
+        {
+            RectangleProvider = new UIRectangleProvider();
+            RectangleProvider.LoadRectangles(new RandomSizeGenerator
+            {
+                Count = _countSpinner.Value,
+                MinimimWidth = _minWidthSpinner.Value,
+                MaximimWidth = _maxWidthSpinner.Value,
+                MinimimHeight = _minHeightSpinner.Value,
+                MaximimHeight = _maxHeightSpinner.Value,
+                SquaresOnly = _sqauresCheck.IsChecked ?? false
+            }.Generate());
+            DialogResult = true;
         }
     }
 }

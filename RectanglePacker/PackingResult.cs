@@ -8,6 +8,7 @@ namespace RectanglePacker
         public Packer<R> Packer { get; private set; }
         public double TotalSpaceOccupation { get; private set; }
         public int UsedTileCount => Packer.Tiles.Count;
+        public int OrphanCount => Packer.OrphanedRectangles.Count;
         public TimeSpan PackingTime { get; private set; }
 
         private DateTime _startTime;

@@ -3,184 +3,269 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cmds="clr-namespace:RectanglePackerWindow.Commands"
         xmlns:c="clr-namespace:RectanglePackerWindow.Controls"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
         Icon="..\Resources\RectanglePacker.ico"
+        WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
-        Title="Rectangle Packer" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="3*"/>
-        </Grid.ColumnDefinitions>
+        Title="Rectangle Packer" Height="450" Width="850">
 
-        <Grid Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+    <Window.CommandBindings>
+        <CommandBinding
+            Command="cmds:WindowCommands.GenerateRectangles"
+            Executed="GenerateRectanglesCommandBinding_Executed"/>
+        <CommandBinding
+            Command="cmds:WindowCommands.ImportRectangles"
+            Executed="ImportRectanglesCommandBinding_Executed"/>
+        <CommandBinding
+            Command="cmds:WindowCommands.ImportImages"
+            Executed="ImportImagesCommandBinding_Executed"/>
+        <CommandBinding
+            Command="cmds:WindowCommands.Save"
+            CanExecute="SaveCommandBinding_CanExecute"
+            Executed="SaveCommandBinding_Executed"/>
+        <CommandBinding
+            Command="cmds:WindowCommands.Exit"
+            Executed="ExitCommandBinding_Executed"/>
+        <CommandBinding
+            Command="cmds:WindowCommands.Pack"
+            Executed="PackCommandBinding_Executed"/>
+        <CommandBinding
+            Command="cmds:WindowCommands.Reset"
+            CanExecute="SaveCommandBinding_CanExecute"
+            Executed="ResetCommandBinding_Executed"/>
+        <CommandBinding
+            Command="cmds:WindowCommands.GitHub"
+            Executed="GitHubCommandBinding_Executed"/>
+        <CommandBinding
+            Command="cmds:WindowCommands.CheckForUpdate"
+            Executed="CheckForUpdateCommandBinding_Executed"/>
+        <CommandBinding
+            Command="cmds:WindowCommands.ShowUpdate"
+            Executed="ShowUpdateCommandBinding_Executed"/>
+        <CommandBinding
+            Command="cmds:WindowCommands.About"
+            Executed="AboutCommandBinding_Executed"/>
+    </Window.CommandBindings>
 
-            <Grid>
+    <DockPanel x:Name="_container">
+        <Menu
+            DockPanel.Dock="Top"
+            Background="#fff">
+            <MenuItem Header="_File">
+                <MenuItem
+                    Header="Generate Rectangles"
+                    Command="cmds:WindowCommands.GenerateRectangles"/>
+                <MenuItem
+                    Header="Import Rectangles"
+                    Command="cmds:WindowCommands.ImportRectangles"/>
+                <MenuItem
+                    Header="Import Images"
+                    Command="cmds:WindowCommands.ImportImages"/>
+                <Separator/>
+                <MenuItem
+                    Header="Save Tiles"
+                    Command="cmds:WindowCommands.Save"/>
+                <Separator/>
+                <MenuItem
+                    Header="Exit"
+                    Command="cmds:WindowCommands.Exit"/>
+            </MenuItem>
+
+            <MenuItem Header="_Help">
+                <MenuItem
+                    Header="GitHub"
+                    Command="cmds:WindowCommands.GitHub"/>
+
+                <Separator/>
+
+                <MenuItem
+                    Header="Check For Updates"
+                    Command="cmds:WindowCommands.CheckForUpdate"/>
+                
+                <Separator/>
+
+                <MenuItem
+                    Header="About Rectangle Packer"
+                    Command="cmds:WindowCommands.About"/>
+            </MenuItem>
+
+            <MenuItem
+                Header="_Update Available"
+                x:Name="_updateAvailableMenu"
+                Visibility="Collapsed"
+                Foreground="#0D60A6"
+                FontWeight="Bold"
+                Command="cmds:WindowCommands.ShowUpdate"/>
+        </Menu>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Border
-                    BorderBrush="#ccc"
-                    BorderThickness="1"
-                    Margin="0,0,0,5">
-                    <ScrollViewer
-                        VerticalScrollBarVisibility="Auto">
-                        <WrapPanel 
-                            x:Name="_unsortedPanel"
-                            Orientation="Horizontal"/>
-                    </ScrollViewer>
-                </Border>
-                <Button
-                    Grid.Row="1"
-                    Click="RectanglesButton_Click"
-                    Content="Load Rectangles"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Right"
-                    Width="120"
-                    Margin="0,0,0,10"/>
-            </Grid>
-            
-            <Grid
+                <Grid Margin="0,0,0,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Border
+                        BorderBrush="#ccc"
+                        BorderThickness="1"
+                        Margin="0,0,0,5">
+                        <ScrollViewer
+                            VerticalScrollBarVisibility="Auto">
+                            <WrapPanel 
+                                x:Name="_unsortedPanel"
+                                Orientation="Horizontal"/>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+
+                <Grid
                 Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                <Label 
-                    Content="Fill Mode"/>
-                <ComboBox
-                    x:Name="_packingModeCombo"
-                    VerticalAlignment="Center"
-                    Grid.Column="1">
-                    <ComboBoxItem Tag="0">Horizontal</ComboBoxItem>
-                    <ComboBoxItem Tag="1" IsSelected="True">Vertical</ComboBoxItem>
-                </ComboBox>
+                    <Label 
+                        Content="Fill Mode"/>
+                    <ComboBox
+                        x:Name="_packingModeCombo"
+                        VerticalAlignment="Center"
+                        Grid.Column="1">
+                        <ComboBoxItem Tag="0">Horizontal</ComboBoxItem>
+                        <ComboBoxItem Tag="1" IsSelected="True">Vertical</ComboBoxItem>
+                    </ComboBox>
 
-                <Label 
-                    Content="Sort Mode"
-                    Grid.Row="1"/>
-                <ComboBox
-                    x:Name="_sortModeCombo"
-                    VerticalAlignment="Center"
-                    Grid.Column="1"
-                    Grid.Row="1">
-                    <ComboBoxItem Tag="0" IsSelected="True">Width</ComboBoxItem>
-                    <ComboBoxItem Tag="1">Height</ComboBoxItem>
-                    <ComboBoxItem Tag="2">Area</ComboBoxItem>
-                    <ComboBoxItem Tag="3">Perimiter</ComboBoxItem>
-                </ComboBox>
+                    <Label 
+                        Content="Sort Mode"
+                        Grid.Row="1"/>
+                    <ComboBox
+                        x:Name="_sortModeCombo"
+                        VerticalAlignment="Center"
+                        Grid.Column="1"
+                        Grid.Row="1">
+                        <ComboBoxItem Tag="0" IsSelected="True">Width</ComboBoxItem>
+                        <ComboBoxItem Tag="1">Height</ComboBoxItem>
+                        <ComboBoxItem Tag="2">Area</ComboBoxItem>
+                        <ComboBoxItem Tag="3">Perimiter</ComboBoxItem>
+                    </ComboBox>
 
-                <Label 
-                    Content="Sort Order"
-                    Grid.Row="2"/>
-                <ComboBox
-                    x:Name="_sortOrderCombo"
-                    VerticalAlignment="Center"
-                    Grid.Column="1"
-                    Grid.Row="2">
-                    <ComboBoxItem Tag="0">Ascending</ComboBoxItem>
-                    <ComboBoxItem Tag="1" IsSelected="True">Descending</ComboBoxItem>
-                </ComboBox>
+                    <Label 
+                        Content="Sort Order"
+                        Grid.Row="2"/>
+                    <ComboBox
+                        x:Name="_sortOrderCombo"
+                        VerticalAlignment="Center"
+                        Grid.Column="1"
+                        Grid.Row="2">
+                        <ComboBoxItem Tag="0">Ascending</ComboBoxItem>
+                        <ComboBoxItem Tag="1" IsSelected="True">Descending</ComboBoxItem>
+                    </ComboBox>
 
-                <Label 
-                    Content="Group By"
-                    Grid.Row="3"/>
-                <ComboBox
-                    x:Name="_groupByCombo"
-                    VerticalAlignment="Center"
-                    Grid.Column="1"
-                    Grid.Row="3">
-                    <ComboBoxItem Tag="0" IsSelected="True">None</ComboBoxItem>
-                    <ComboBoxItem Tag="1">Squares</ComboBoxItem>
-                </ComboBox>
+                    <Label 
+                        Content="Group By"
+                        Grid.Row="3"/>
+                    <ComboBox
+                        x:Name="_groupByCombo"
+                        VerticalAlignment="Center"
+                        Grid.Column="1"
+                        Grid.Row="3">
+                        <ComboBoxItem Tag="0" IsSelected="True">None</ComboBoxItem>
+                        <ComboBoxItem Tag="1">Squares</ComboBoxItem>
+                    </ComboBox>
 
-                <Label
-                    Grid.Row="4"
-                    Content="Tile Width"/>
-                <c:NumericUpDown
-                    x:Name="_widthSpinner"
-                    Grid.Row="4"
-                    Grid.Column="1"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Value="256"
-                    MinValue="1"/>
+                    <Label
+                        Grid.Row="4"
+                        Content="Tile Width"/>
+                    <c:NumericUpDown
+                        x:Name="_widthSpinner"
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Value="256"
+                        MinValue="1"/>
 
-                <Label
-                    Grid.Row="5"
-                    Content="Tile Height"/>
-                <c:NumericUpDown
-                    x:Name="_heightSpinner"
-                    Grid.Row="5"
-                    Grid.Column="1"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Value="256"
-                    MinValue="1"/>
+                    <Label
+                        Grid.Row="5"
+                        Content="Tile Height"/>
+                    <c:NumericUpDown
+                        x:Name="_heightSpinner"
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Value="256"
+                        MinValue="1"/>
 
-                <Label
-                    Grid.Row="6"
-                    Content="Maximum Tiles"/>
-                <c:NumericUpDown
-                    x:Name="_tilesSpinner"
-                    Grid.Row="6"
-                    Grid.Column="1"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Value="16"
-                    MinValue="1"/>
+                    <Label
+                        Grid.Row="6"
+                        Content="Maximum Tiles"/>
+                    <c:NumericUpDown
+                        x:Name="_tilesSpinner"
+                        Grid.Row="6"
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Value="16"
+                        MinValue="1"/>
 
-                <StackPanel
-                    Grid.Row="7"
-                    Grid.Column="1"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right">
-                    <Button
-                        Margin="0,10,10,0"
-                        Width="60"
-                        Content="Start"
-                        Click="StartButton_Click"/>
+                    <StackPanel
+                        Grid.Row="7"
+                        Grid.ColumnSpan="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                        <Button
+                            Margin="0,10,10,0"
+                            Width="60"
+                            Content="Pack"
+                            Command="cmds:WindowCommands.Pack"/>
 
-                    <Button
-                        Margin="0,10,0,0"
-                        Width="60"
-                        Content="Reset"
-                        Click="ResetButton_Click"/>
-                </StackPanel>
+                        <Button
+                            Margin="0,10,0,0"
+                            Width="60"
+                            Content="Reset"
+                            Command="cmds:WindowCommands.Reset"/>
+                    </StackPanel>
+                </Grid>
             </Grid>
-        </Grid>
 
-        <Border
-            Grid.Row="0"
-            Grid.Column="1"
-            BorderBrush="#ccc"
-            BorderThickness="1"
-            Margin="0,10,10,10">
-            <ScrollViewer
-                VerticalScrollBarVisibility="Auto">
+            <Border
+                Grid.Row="0"
+                Grid.Column="1"
+                BorderBrush="#ccc"
+                BorderThickness="1"
+                Margin="0,10,10,10">
+                <ScrollViewer
+                    VerticalScrollBarVisibility="Auto">
                     <WrapPanel
                         Orientation="Horizontal"
                         x:Name="_canvasContainer"/>
-            </ScrollViewer>
-        </Border>
-    </Grid>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </DockPanel>
 </Window>
