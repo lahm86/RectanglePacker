@@ -12,7 +12,7 @@ namespace RectanglePacker.Defaults
         public int Area => Width * Height;
         public int FreeSpace => Area - UsedSpace;
         public int UsedSpace { get; private set; }
-
+        
         public PackingFillMode FillMode { get; set; }
 
         public IReadOnlyList<R> Rectangles => _rectangles;
@@ -133,6 +133,12 @@ namespace RectanglePacker.Defaults
                 return true;
             }
             return false;
+        }
+
+        public Rectangle GetOccupiedRegion(Graphics g)
+        {
+            RectangleF rect = _occupiedRegion.GetBounds(g);
+            return new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
         }
     }
 }
