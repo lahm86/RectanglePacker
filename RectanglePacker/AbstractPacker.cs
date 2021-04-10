@@ -1,15 +1,21 @@
-﻿using System;
+﻿using RectanglePacker.Comparison;
+using RectanglePacker.Events;
+using RectanglePacker.Organisation;
+using System;
 using System.Collections.Generic;
 
 namespace RectanglePacker
 {
-    public class Packer<R> where R : class, IRectangle
+    public abstract class AbstractPacker<T, R> where T : class, ITile<R> where R : class, IRectangle
     {
-        private List<Tile<R>> _tiles;
-        private readonly List<R> _rectangles, _orphanedRectangles;
+        protected readonly List<T> _tiles;
+        protected readonly List<R> _rectangles, _orphanedRectangles;
 
         public int TotalRectangles => _rectangles.Count;
         public int TotalTiles => _tiles == null ? 0 : _tiles.Count;
+        public int TotalSpace => TileWidth * TileHeight * MaximumTiles;
+        public int TotalFreeSpace => GetTotalFreeSpace();
+        public int TotalUsedSpace => GetTotalUsedSpace();
         public int MaximumTiles { get; set; }
         public int TileWidth { get; set; }
         public int TileHeight { get; set; }
@@ -18,13 +24,14 @@ namespace RectanglePacker
         public PackingOrderMode OrderMode { get; set; }
         public PackingOrder Order { get; set; }
 
-        public IReadOnlyList<Tile<R>> Tiles => _tiles;
+        public IReadOnlyList<T> Tiles => _tiles;
         public IReadOnlyList<R> OrphanedRectangles => _orphanedRectangles;
 
-        public event EventHandler<RectanglePositionEventArgs<R>> RectanglePositioned;
+        public event EventHandler<RectanglePositionEventArgs<T, R>> RectanglePositioned;
 
-        public Packer()
+        public AbstractPacker()
         {
+            _tiles = new List<T>();
             _rectangles = new List<R>();
             _orphanedRectangles = new List<R>();
             MaximumTiles = 0;
@@ -45,9 +52,10 @@ namespace RectanglePacker
         public void Reset()
         {
             _rectangles.Clear();
+            _tiles.Clear();
         }
 
-        public PackingResult<R> Pack()
+        public PackingResult<T, R> Pack()
         {
             if (MaximumTiles <= 0)
             {
@@ -69,12 +77,11 @@ namespace RectanglePacker
                 throw new ArgumentException("There are no rectangles to pack.");
             }
 
-            PackingResult<R> results = new PackingResult<R>(this);
+            PackingResult<T, R> results = new PackingResult<T, R>(this);
             results.BeginTimer();
 
             SortRectangles();
 
-            _tiles = new List<Tile<R>>(MaximumTiles);
             _orphanedRectangles.Clear();
 
             foreach (R r in _rectangles)
@@ -89,7 +96,7 @@ namespace RectanglePacker
             return results;
         }
 
-        private void SortRectangles()
+        protected void SortRectangles()
         {
             IComparer<R> comparer;
             switch (OrderMode)
@@ -122,7 +129,7 @@ namespace RectanglePacker
                 for (int i = _rectangles.Count - 1; i >= 0; i--)
                 {
                     R r = _rectangles[i];
-                    if (r.Width == r.Height)
+                    if (r.Bounds.Width == r.Bounds.Height)
                     {
                         if (!squareMap.ContainsKey(r.Area))
                         {
@@ -146,21 +153,16 @@ namespace RectanglePacker
             }
         }
 
-        private bool Pack(R rectangle)
+        protected bool Pack(R rectangle)
         {
-            for (int i = 0; i < _tiles.Capacity; i++)
+            for (int i = 0; i < MaximumTiles; i++)
             {
                 if (_tiles.Count == i)
                 {
-                    _tiles.Add(new Tile<R>
-                    {
-                        Width = TileWidth,
-                        Height = TileHeight,
-                        FillMode = FillMode
-                    });
+                    AddTile();
                 }
 
-                Tile<R> tile = _tiles[i];
+                T tile = _tiles[i];
                 if (tile.Add(rectangle))
                 {
                     FireRectanglePositioned(rectangle, tile, i);
@@ -170,61 +172,61 @@ namespace RectanglePacker
             return false;
         }
 
-        private void FireRectanglePositioned(R rectangle, Tile<R> tile, int tileIndex)
+        protected abstract T CreateTile();
+
+        protected void AddTiles(uint count = 1)
         {
-            RectanglePositioned?.Invoke(this, new RectanglePositionEventArgs<R>
+            for (int i = 0; i < count; i++)
+            {
+                AddTile();
+            }
+        }
+
+        protected T AddTile()
+        {
+            T newTile = CreateTile();
+            _tiles.Add(newTile);
+            newTile.Width = TileWidth;
+            newTile.Height = TileHeight;
+            newTile.FillMode = FillMode;
+            return newTile;
+        }
+
+        protected void FireRectanglePositioned(R rectangle, T tile, int tileIndex)
+        {
+            RectanglePositioned?.Invoke(this, new RectanglePositionEventArgs<T, R>
             {
                 Rectangle = rectangle,
                 Tile = tile,
                 TileIndex = tileIndex
             });
         }
-    }
 
-    class AreaComparer<R> : IComparer<R> where R : IRectangle
-    {
-        public int Compare(R r1, R r2)
+        protected int GetTotalFreeSpace()
         {
-            return r1.Area.CompareTo(r2.Area);
-        }
-    }
-
-    class HeightComparer<R> : IComparer<R> where R : IRectangle
-    {
-        public int Compare(R r1, R r2)
-        {
-            return r1.Height.CompareTo(r2.Height);
-        }
-    }
-
-    class PerimiterComparer<R> : IComparer<R> where R : IRectangle
-    {
-        public int Compare(R r1, R r2)
-        {
-            return r1.Perimiter.CompareTo(r2.Perimiter);
-        }
-    }
-
-    class WidthComparer<R> : IComparer<R> where R : IRectangle
-    {
-        public int Compare(R r1, R r2)
-        {
-            return r1.Width.CompareTo(r2.Width);
-        }
-    }
-
-    class SquareComparer<R> : IComparer<R> where R : IRectangle
-    {
-        public int Compare(R r1, R r2)
-        {
-            bool b1 = r1.Width == r1.Height;
-            bool b2 = r2.Width == r2.Height;
-            if (b1 && b2)
+            int total = 0;
+            for (int i = 0; i < MaximumTiles; i++)
             {
-                return r1.Area.CompareTo(r2.Area);
+                if (i >= _tiles.Count)
+                {
+                    total += TileWidth * TileHeight;
+                }
+                else
+                {
+                    total += _tiles[i].FreeSpace;
+                }
             }
+            return total;
+        }
 
-            return b1 ? -1 : 1;
+        protected int GetTotalUsedSpace()
+        {
+            int total = 0;
+            foreach (T tile in _tiles)
+            {
+                total += tile.UsedSpace;
+            }
+            return total;
         }
     }
 }

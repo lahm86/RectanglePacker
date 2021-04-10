@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using RectanglePacker.Organisation;
+using System.Collections.Generic;
 using System.Drawing;
 
-namespace RectanglePacker
+namespace RectanglePacker.Defaults
 {
-    public class Tile<R> where R : class, IRectangle
+    public class DefaultTile<R> : ITile<R> where R : class, IRectangle
     {
         public int Width { get; set; }
         public int Height { get; set; }
@@ -16,11 +17,11 @@ namespace RectanglePacker
 
         public IReadOnlyList<R> Rectangles => _rectangles;
 
-        private readonly List<R> _rectangles;
+        protected readonly List<R> _rectangles;
 
-        private Region _occupiedRegion;
+        protected Region _occupiedRegion;
 
-        public Tile()
+        public DefaultTile()
         {
             _rectangles = new List<R>();
             UsedSpace = 0;
@@ -33,19 +34,18 @@ namespace RectanglePacker
                 return false;
             }
 
-            if (_occupiedRegion == null)
+            if (UsedSpace == 0)
             {
-                InitialiseOccupiedRegion(rectangle);
-                return true;
+                return Add(rectangle, 0, 0);
             }
 
             return FillMode == PackingFillMode.Horizontal ? AddHorizontally(rectangle) : AddVertically(rectangle);
         }
 
-        private bool AddHorizontally(R rectangle)
+        protected bool AddHorizontally(R rectangle)
         {
-            int maxX = Width - rectangle.Width;
-            int maxY = Height - rectangle.Height;
+            int maxX = Width - rectangle.Bounds.Width;
+            int maxY = Height - rectangle.Bounds.Height;
 
             Point p = new Point(0, 0);
             while (p.Y <= maxY)
@@ -65,10 +65,10 @@ namespace RectanglePacker
             return false;
         }
 
-        private bool AddVertically(R rectangle)
+        protected bool AddVertically(R rectangle)
         {
-            int maxX = Width - rectangle.Width;
-            int maxY = Height - rectangle.Height;
+            int maxX = Width - rectangle.Bounds.Width;
+            int maxY = Height - rectangle.Bounds.Height;
 
             Point p = new Point(0, 0);
             while (p.X <= maxX)
@@ -88,10 +88,14 @@ namespace RectanglePacker
             return false;
         }
 
-        public bool Add(R rectangle, int x, int y)
+        protected virtual bool Add(R rectangle, int x, int y)
         {
-            Rectangle mappedRect = new Rectangle(x, y, rectangle.Width, rectangle.Height);
-            if (_occupiedRegion.IsVisible(mappedRect))
+            Rectangle mappedRect = new Rectangle(x, y, rectangle.Bounds.Width, rectangle.Bounds.Height);
+            if (_occupiedRegion == null)
+            {
+                _occupiedRegion = new Region(mappedRect);
+            }
+            else if (_occupiedRegion.IsVisible(mappedRect))
             {
                 return false;
             }
@@ -103,24 +107,32 @@ namespace RectanglePacker
             return true;
         }
 
-        private void InitialiseOccupiedRegion(R rectangle)
-        {
-            rectangle.MappedX = 0;
-            rectangle.MappedY = 0;
-            Rectangle mappedRect = new Rectangle(0, 0, rectangle.Width, rectangle.Height);
-            _occupiedRegion = new Region(mappedRect);
-
-            StoreRectangle(rectangle, null);
-        }
-
-        private void StoreRectangle(R rectangle, Rectangle? mappedRectangle)
+        protected void StoreRectangle(R rectangle, Rectangle mappedRectangle)
         {
             _rectangles.Add(rectangle);
             UsedSpace += rectangle.Area;
-            if (mappedRectangle.HasValue)
+            if (_rectangles.Count > 1)
             {
-                _occupiedRegion.Union(mappedRectangle.Value);
+                _occupiedRegion.Union(mappedRectangle);
             }
+        }
+
+        public virtual bool Remove(R rectangle)
+        {
+            if (_rectangles.Remove(rectangle))
+            {
+                UsedSpace -= rectangle.Area;
+                if (_rectangles.Count == 0)
+                {
+                    _occupiedRegion = null;
+                }
+                else
+                {
+                    _occupiedRegion.Exclude(new Rectangle(rectangle.MappedX, rectangle.MappedY, rectangle.Bounds.Width, rectangle.Bounds.Height));
+                }
+                return true;
+            }
+            return false;
         }
     }
 }

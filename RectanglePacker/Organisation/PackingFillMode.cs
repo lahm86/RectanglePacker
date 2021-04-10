@@ -1,4 +1,4 @@
-﻿namespace RectanglePacker
+﻿namespace RectanglePacker.Organisation
 {
     public enum PackingFillMode
     {

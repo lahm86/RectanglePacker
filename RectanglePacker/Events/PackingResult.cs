@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RectanglePacker
+namespace RectanglePacker.Events
 {
-    public class PackingResult<R> where R : class, IRectangle
+    public class PackingResult<T, R> where T : class, ITile<R> where R : class, IRectangle
     {
-        public Packer<R> Packer { get; private set; }
+        public AbstractPacker<T, R> Packer { get; private set; }
         public double TotalSpaceOccupation { get; private set; }
         public int UsedTileCount => Packer.Tiles.Count;
         public int OrphanCount => Packer.OrphanedRectangles.Count;
@@ -13,7 +13,7 @@ namespace RectanglePacker
 
         private DateTime _startTime;
 
-        internal PackingResult(Packer<R> packer)
+        internal PackingResult(AbstractPacker<T, R> packer)
         {
             Packer = packer;
         }
@@ -27,10 +27,10 @@ namespace RectanglePacker
         {
             PackingTime = DateTime.Now.Subtract(_startTime);
             int spaceUsed = 0;
-            IReadOnlyList<Tile<R>> tiles = Packer.Tiles;
+            IReadOnlyList<T> tiles = Packer.Tiles;
             for (int i = 0; i < tiles.Count; i++)
             {
-                Tile<R> tile = tiles[i];
+                T tile = tiles[i];
                 spaceUsed += tile.UsedSpace;
             }
             TotalSpaceOccupation = Math.Round(100 * (double)spaceUsed / (tiles[0].Area * tiles.Count), 2);

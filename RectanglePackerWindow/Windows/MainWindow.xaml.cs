@@ -1,6 +1,6 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
-using Newtonsoft.Json;
 using RectanglePacker;
+using RectanglePacker.Organisation;
 using RectanglePackerWindow.Model;
 using RectanglePackerWindow.Updates;
 using RectanglePackerWindow.Utilities;
@@ -12,8 +12,6 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace RectanglePackerWindow.Windows

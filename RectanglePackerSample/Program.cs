@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
-using RectanglePacker;
+using RectanglePacker.Defaults;
+using RectanglePacker.Events;
+using RectanglePacker.Organisation;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -24,10 +26,10 @@ namespace RectanglePackerSample
             int mode = ReadInt(0, 1);
 
             Console.Write("Reading sample rectangles...");
-            List<SampleRectangle> rectangles = new List<SampleRectangle>();
+            List<DefaultRectangle> rectangles = new List<DefaultRectangle>();
             foreach (Size s in JsonConvert.DeserializeObject<Size[]>(File.ReadAllText("SampleSizes.json")))
             {
-                rectangles.Add(new SampleRectangle { Rectangle = new Rectangle(0, 0, s.Width, s.Height) });
+                rectangles.Add(new DefaultRectangle(0, 0, s.Width, s.Height));
             }
             Console.WriteLine("{0} rectangles loaded", rectangles.Count);
 
@@ -60,7 +62,7 @@ namespace RectanglePackerSample
             Console.Read();
         }
 
-        private static void Packer_RectanglePositioned(object sender, RectanglePositionEventArgs<SampleRectangle> e)
+        private static void Packer_RectanglePositioned(object sender, RectanglePositionEventArgs<DefaultTile<DefaultRectangle>, DefaultRectangle> e)
         {
             //Console.WriteLine("Tile {0} => [{1}, {2}, {3}, {4}]", e.TileIndex, e.Rectangle.MappedX, e.Rectangle.MappedY, e.Rectangle.Width, e.Rectangle.Height);
         }
@@ -130,11 +132,11 @@ namespace RectanglePackerSample
             Console.WriteLine("[1] Group by squares");
             PackingGroupMode groupMode = (PackingGroupMode)ReadInt(0, 1);
 
-            PackingResult<SampleRectangle> results = Pack(fillMode, orderMode, order, groupMode);
+            PackingResult<DefaultTile<DefaultRectangle>, DefaultRectangle> results = Pack(fillMode, orderMode, order, groupMode);
             ConvertResults(results);
         }
 
-        private static PackingResult<SampleRectangle> Pack(PackingFillMode fillMode, PackingOrderMode orderMode, PackingOrder order, PackingGroupMode groupMode)
+        private static PackingResult<DefaultTile<DefaultRectangle>, DefaultRectangle> Pack(PackingFillMode fillMode, PackingOrderMode orderMode, PackingOrder order, PackingGroupMode groupMode)
         {
             _sample.Packer.TileWidth = 256;
             _sample.Packer.TileHeight = 256;
@@ -149,7 +151,7 @@ namespace RectanglePackerSample
             return _sample.Pack();
         }
 
-        private static void ConvertResults(PackingResult<SampleRectangle> results)
+        private static void ConvertResults(PackingResult<DefaultTile<DefaultRectangle>, DefaultRectangle> results)
         {
             _resultData.AppendLine();
 
@@ -162,8 +164,8 @@ namespace RectanglePackerSample
             _resultData.Append(results.UsedTileCount).Append(",");
             _resultData.Append(results.TotalSpaceOccupation).Append("%");
 
-            IReadOnlyList<Tile<SampleRectangle>> tiles = results.Packer.Tiles;
-            foreach (Tile<SampleRectangle> tile in tiles)
+            IReadOnlyList<DefaultTile<DefaultRectangle>> tiles = results.Packer.Tiles;
+            foreach (DefaultTile<DefaultRectangle> tile in tiles)
             {
                 _resultData.Append(",").Append(Math.Round(100 * (double)tile.UsedSpace / tile.Area, 2)).Append("%");
             }

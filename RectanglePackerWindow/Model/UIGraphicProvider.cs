@@ -1,5 +1,8 @@
 ﻿using Newtonsoft.Json;
 using RectanglePacker;
+using RectanglePacker.Defaults;
+using RectanglePacker.Events;
+using RectanglePacker.Organisation;
 using RectanglePackerWindow.Utilities;
 using System;
 using System.Collections.Generic;
@@ -23,7 +26,7 @@ namespace RectanglePackerWindow.Model
         private List<UIGraphic> _rectangles;
         public List<IRectangle> Rectangles => _rectangles.Cast<IRectangle>().ToList();
 
-        private Packer<UIGraphic> _packer;
+        private UIGraphicPacker _packer;
 
         public event EventHandler<RectanglePositionedEventArgs> RectanglePositioned;
 
@@ -76,7 +79,7 @@ namespace RectanglePackerWindow.Model
 
         public void Pack(int tileWidth, int tileHeight, int maxTiles, PackingFillMode fillMode, PackingOrderMode orderMode, PackingOrder order, PackingGroupMode groupMode)
         {
-            _packer = new Packer<UIGraphic>
+            _packer = new UIGraphicPacker
             {
                 TileWidth = tileWidth,
                 TileHeight = tileHeight,
@@ -88,14 +91,14 @@ namespace RectanglePackerWindow.Model
             };
             _packer.AddRectangles(_rectangles);
             _packer.RectanglePositioned += Packer_RectanglePositioned;
-            PackingResult<UIGraphic> result = _packer.Pack();
+            PackingResult<DefaultTile<UIGraphic>, UIGraphic> result = _packer.Pack();
             if (result.OrphanCount > 0)
             {
                 throw new Exception("At least one rectangle could not be positioned.");
             }
         }
 
-        private void Packer_RectanglePositioned(object sender, RectanglePositionEventArgs<UIGraphic> e)
+        private void Packer_RectanglePositioned(object sender, RectanglePositionEventArgs<DefaultTile<UIGraphic>, UIGraphic> e)
         {
             RectanglePositioned?.Invoke(this, new RectanglePositionedEventArgs
             {

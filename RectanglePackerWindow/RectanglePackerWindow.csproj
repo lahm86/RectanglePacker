@@ -82,7 +82,9 @@
     <Compile Include="Model\RandomSizeGenerator.cs" />
     <Compile Include="Model\RectanglePositionedEventArgs.cs" />
     <Compile Include="Model\UIGraphic.cs" />
+    <Compile Include="Model\UIGraphicPacker.cs" />
     <Compile Include="Model\UIGraphicProvider.cs" />
+    <Compile Include="Model\UIRectanglePacker.cs" />
     <Compile Include="Updates\Update.cs" />
     <Compile Include="Updates\UpdateChecker.cs" />
     <Compile Include="Updates\UpdateEventArgs.cs" />

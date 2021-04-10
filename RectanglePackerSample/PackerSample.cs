@@ -1,4 +1,5 @@
-﻿using RectanglePacker;
+﻿using RectanglePacker.Defaults;
+using RectanglePacker.Events;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,14 +13,14 @@ namespace RectanglePackerSample
         private static readonly Brush[] _allBrushes = LoadBrushes();
         private static readonly Random _rand = new Random();
 
-        public List<SampleRectangle> Rectangles { get; set; }
-        public Packer<SampleRectangle> Packer { get; private set; }
+        public List<DefaultRectangle> Rectangles { get; set; }
+        public DefaultPacker Packer { get; private set; }
         public bool DrawBitmaps { get; set; }
         private const string _bitmapDirectory = "TileOutput";
 
         public PackerSample()
         {
-            Packer = new Packer<SampleRectangle>();
+            Packer = new DefaultPacker();
             DrawBitmaps = true;
 
             if (Directory.Exists(_bitmapDirectory))
@@ -29,11 +30,11 @@ namespace RectanglePackerSample
             Directory.CreateDirectory(_bitmapDirectory);
         }
 
-        public PackingResult<SampleRectangle> Pack()
+        public PackingResult<DefaultTile<DefaultRectangle>, DefaultRectangle> Pack()
         {
             Packer.Reset();
             Packer.AddRectangles(Rectangles);
-            PackingResult<SampleRectangle> results = Packer.Pack();
+            PackingResult<DefaultTile<DefaultRectangle>, DefaultRectangle> results = Packer.Pack();
 
             if (DrawBitmaps)
             {
@@ -45,14 +46,14 @@ namespace RectanglePackerSample
 
         private void DrawBitmapOutputs()
         {
-            IReadOnlyList<Tile<SampleRectangle>> tiles = Packer.Tiles;
+            IReadOnlyList<DefaultTile<DefaultRectangle>> tiles = Packer.Tiles;
             for (int i = 0; i < tiles.Count; i++)
             {
-                Tile<SampleRectangle> tile = tiles[i];
+                DefaultTile<DefaultRectangle> tile = tiles[i];
                 using (Bitmap bmp = new Bitmap(tile.Width, tile.Height, PixelFormat.Format32bppArgb))
                 using (Graphics g = Graphics.FromImage(bmp))
                 {
-                    foreach (SampleRectangle rect in tile.Rectangles)
+                    foreach (DefaultRectangle rect in tile.Rectangles)
                     {
                         Rectangle r = new Rectangle(rect.MappedX, rect.MappedY, rect.Width, rect.Height);
                         g.FillRectangle(_allBrushes[_rand.Next(0, _allBrushes.Length)], r);

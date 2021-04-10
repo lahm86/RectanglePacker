@@ -1,15 +1,17 @@
 ﻿using RectanglePacker;
+using RectanglePacker.Defaults;
 using System.Windows.Shapes;
+using D = System.Drawing;
 
 namespace RectanglePackerWindow.Model
 {
-    public class UIRectangle : IRectangle
+    public class UIRectangle : DefaultRectangle
     {
-        private Rectangle _rect;
-        private int _area, _perimiter;
+        //private Rectangle _rect;
+        //private int _area, _perimiter;
 
-        public Rectangle RectangleShape
-        {
+        public Rectangle RectangleShape { get; set; }
+        /*{
             get => _rect;
             set
             {
@@ -19,22 +21,18 @@ namespace RectanglePackerWindow.Model
             }
         }
 
-        public int OriginalX { get; private set; }
-        public int OriginalY { get; private set; }
-        public int Width { get; private set; }
-        public int Height { get; private set; }
+        public D.Rectangle Bounds { get; private set; }
+        public int Width => Bounds.Width;
+        public int Height => Bounds.Height;
 
         public int Area => _area;
         public int Perimiter => _perimiter;
         public int MappedX { get; set; }
-        public int MappedY { get; set; }
+        public int MappedY { get; set; }*/
 
         public UIRectangle(int x, int y, int width, int height)
+            :base(x, y, width, height)
         {
-            OriginalX = x;
-            OriginalY = y;
-            Width = width;
-            Height = height;
             RectangleShape = new Rectangle
             {
                 Width = width,

@@ -1,4 +1,5 @@
 ﻿using RectanglePacker;
+using RectanglePacker.Organisation;
 using System;
 using System.Collections.Generic;
 using System.Windows;

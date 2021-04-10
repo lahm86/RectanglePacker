@@ -42,14 +42,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Packer.cs" />
-    <Compile Include="PackingResult.cs" />
-    <Compile Include="PackingFillMode.cs" />
-    <Compile Include="PackingGroupMode.cs" />
-    <Compile Include="PackingOrderMode.cs" />
-    <Compile Include="PackingOrder.cs" />
-    <Compile Include="RectanglePositionEventArgs.cs" />
-    <Compile Include="Tile.cs" />
+    <Compile Include="Comparison\AreaComparer.cs" />
+    <Compile Include="Comparison\HeightComparer.cs" />
+    <Compile Include="Comparison\PerimiterComparer.cs" />
+    <Compile Include="Comparison\SquareComparer.cs" />
+    <Compile Include="Comparison\WidthComparer.cs" />
+    <Compile Include="Defaults\DefaultPacker.cs" />
+    <Compile Include="Defaults\DefaultRectangle.cs" />
+    <Compile Include="ITile.cs" />
+    <Compile Include="AbstractPacker.cs" />
+    <Compile Include="Events\PackingResult.cs" />
+    <Compile Include="Organisation\PackingFillMode.cs" />
+    <Compile Include="Organisation\PackingGroupMode.cs" />
+    <Compile Include="Organisation\PackingOrderMode.cs" />
+    <Compile Include="Organisation\PackingOrder.cs" />
+    <Compile Include="Events\RectanglePositionEventArgs.cs" />
+    <Compile Include="Defaults\DefaultTile.cs" />
     <Compile Include="IRectangle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
