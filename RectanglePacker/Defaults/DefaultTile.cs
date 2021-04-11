@@ -6,6 +6,7 @@ namespace RectanglePacker.Defaults
 {
     public class DefaultTile<R> : ITile<R> where R : class, IRectangle
     {
+        public int Index { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
 

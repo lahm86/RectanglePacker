@@ -186,6 +186,7 @@ namespace RectanglePacker
         {
             T newTile = CreateTile();
             _tiles.Add(newTile);
+            newTile.Index = _tiles.Count - 1;
             newTile.Width = TileWidth;
             newTile.Height = TileHeight;
             newTile.FillMode = FillMode;

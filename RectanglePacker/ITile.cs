@@ -9,6 +9,7 @@ namespace RectanglePacker
 {
     public interface ITile<R> where R : class, IRectangle
     {
+        int Index { get; set; }
         int Width { get; set; }
         int Height { get; set; }
 
