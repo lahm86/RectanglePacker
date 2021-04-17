@@ -21,5 +21,6 @@ namespace RectanglePacker
 
         bool Add(R rectangle);
         bool Remove(R rectangle);
+        void PackingStarted();
     }
 }

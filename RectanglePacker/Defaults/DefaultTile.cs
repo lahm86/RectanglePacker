@@ -28,6 +28,8 @@ namespace RectanglePacker.Defaults
             UsedSpace = 0;
         }
 
+        public virtual void PackingStarted() { }
+
         public bool Add(R rectangle)
         {
             if (FreeSpace < rectangle.Area)

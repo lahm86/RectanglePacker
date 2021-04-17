@@ -77,6 +77,11 @@ namespace RectanglePacker
                 throw new ArgumentException("There are no rectangles to pack.");
             }
 
+            foreach (T tile in _tiles)
+            {
+                tile.PackingStarted();
+            }
+
             PackingResult<T, R> results = new PackingResult<T, R>(this);
             results.BeginTimer();
 
