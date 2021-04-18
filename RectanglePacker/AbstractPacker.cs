@@ -19,10 +19,8 @@ namespace RectanglePacker
         public int MaximumTiles { get; set; }
         public int TileWidth { get; set; }
         public int TileHeight { get; set; }
-        public PackingFillMode FillMode { get; set; }
-        public PackingGroupMode GroupMode { get; set; }
-        public PackingOrderMode OrderMode { get; set; }
-        public PackingOrder Order { get; set; }
+        
+        public PackingOptions Options { get; set; }
 
         public IReadOnlyList<T> Tiles => _tiles;
         public IReadOnlyList<R> OrphanedRectangles => _orphanedRectangles;
@@ -34,6 +32,7 @@ namespace RectanglePacker
             _tiles = new List<T>();
             _rectangles = new List<R>();
             _orphanedRectangles = new List<R>();
+            Options = new PackingOptions();
             MaximumTiles = 0;
             TileWidth = 0;
             TileHeight = 0;
@@ -89,7 +88,21 @@ namespace RectanglePacker
 
             _orphanedRectangles.Clear();
 
-            foreach (R r in _rectangles)
+            List<R> queue = new List<R>(_rectangles);
+
+            if (Options.StartMethod != PackingStartMethod.FirstTile)
+            {
+                int tileStartIndex = Options.StartMethod == PackingStartMethod.EndTile ? _tiles.Count - 1 : _tiles.Count;
+                foreach (R r in _rectangles)
+                {
+                    if (Pack(r, tileStartIndex))
+                    {
+                        queue.Remove(r);
+                    }
+                }
+            }
+
+            foreach (R r in queue)
             {
                 if (!Pack(r))
                 {
@@ -104,7 +117,7 @@ namespace RectanglePacker
         protected void SortRectangles()
         {
             IComparer<R> comparer;
-            switch (OrderMode)
+            switch (Options.OrderMode)
             {
                 case PackingOrderMode.Area:
                     comparer = new AreaComparer<R>();
@@ -123,12 +136,12 @@ namespace RectanglePacker
 
             _rectangles.Sort(comparer);
 
-            if (Order == PackingOrder.Descending)
+            if (Options.Order == PackingOrder.Descending)
             {
                 _rectangles.Reverse();
             }
 
-            if (GroupMode == PackingGroupMode.Squares)
+            if (Options.GroupMode == PackingGroupMode.Squares)
             {
                 Dictionary<int, List<R>> squareMap = new Dictionary<int, List<R>>();
                 for (int i = _rectangles.Count - 1; i >= 0; i--)
@@ -147,7 +160,7 @@ namespace RectanglePacker
 
                 List<int> areaKeys = new List<int>(squareMap.Keys);
                 areaKeys.Sort();
-                if (Order == PackingOrder.Ascending)
+                if (Options.Order == PackingOrder.Ascending)
                 {
                     areaKeys.Reverse();
                 }
@@ -158,9 +171,9 @@ namespace RectanglePacker
             }
         }
 
-        protected bool Pack(R rectangle)
+        protected bool Pack(R rectangle, int startIndex = 0)
         {
-            for (int i = 0; i < MaximumTiles; i++)
+            for (int i = startIndex; i < MaximumTiles; i++)
             {
                 if (_tiles.Count == i)
                 {
@@ -194,7 +207,7 @@ namespace RectanglePacker
             newTile.Index = _tiles.Count - 1;
             newTile.Width = TileWidth;
             newTile.Height = TileHeight;
-            newTile.FillMode = FillMode;
+            newTile.FillMode = Options.FillMode;
             return newTile;
         }
 

@@ -54,11 +54,13 @@
     <Compile Include="Events\PackingResult.cs" />
     <Compile Include="Organisation\PackingFillMode.cs" />
     <Compile Include="Organisation\PackingGroupMode.cs" />
+    <Compile Include="Organisation\PackingOptions.cs" />
     <Compile Include="Organisation\PackingOrderMode.cs" />
     <Compile Include="Organisation\PackingOrder.cs" />
     <Compile Include="Events\RectanglePositionEventArgs.cs" />
     <Compile Include="Defaults\DefaultTile.cs" />
     <Compile Include="IRectangle.cs" />
+    <Compile Include="Organisation\PackingStartMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

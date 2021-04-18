@@ -141,10 +141,13 @@ namespace RectanglePackerSample
             _sample.Packer.TileWidth = 256;
             _sample.Packer.TileHeight = 256;
             _sample.Packer.MaximumTiles = 16;
-            _sample.Packer.FillMode = fillMode;
-            _sample.Packer.OrderMode = orderMode;
-            _sample.Packer.Order = order;
-            _sample.Packer.GroupMode = groupMode;
+            _sample.Packer.Options = new PackingOptions
+            {
+                FillMode = fillMode,
+                OrderMode = orderMode,
+                Order = order,
+                GroupMode = groupMode
+            };
 
             Console.WriteLine();
             Console.WriteLine("Packing {0}ly ordered by {1} {2}, grouped by {3}", fillMode, orderMode, order, groupMode);
@@ -156,10 +159,10 @@ namespace RectanglePackerSample
             _resultData.AppendLine();
 
             _resultData.Append(results.Packer.TotalRectangles).Append(",");
-            _resultData.Append(results.Packer.FillMode).Append(",");
-            _resultData.Append(results.Packer.OrderMode).Append(",");
-            _resultData.Append(results.Packer.Order).Append(",");
-            _resultData.Append(results.Packer.GroupMode).Append(",");
+            _resultData.Append(results.Packer.Options.FillMode).Append(",");
+            _resultData.Append(results.Packer.Options.OrderMode).Append(",");
+            _resultData.Append(results.Packer.Options.Order).Append(",");
+            _resultData.Append(results.Packer.Options.GroupMode).Append(",");
             _resultData.Append(results.PackingTime.TotalSeconds).Append(",");
             _resultData.Append(results.UsedTileCount).Append(",");
             _resultData.Append(results.TotalSpaceOccupation).Append("%");

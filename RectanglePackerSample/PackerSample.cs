@@ -58,7 +58,7 @@ namespace RectanglePackerSample
                         Rectangle r = new Rectangle(rect.MappedX, rect.MappedY, rect.Width, rect.Height);
                         g.FillRectangle(_allBrushes[_rand.Next(0, _allBrushes.Length)], r);
                     }
-                    bmp.Save(string.Format(@"{0}\{1}{2}{3}{4}_Tile{5}.png", _bitmapDirectory, Packer.FillMode, Packer.OrderMode, Packer.Order, Packer.GroupMode, i), ImageFormat.Png);
+                    bmp.Save(string.Format(@"{0}\{1}{2}{3}{4}_Tile{5}.png", _bitmapDirectory, Packer.Options.FillMode, Packer.Options.OrderMode, Packer.Options.Order, Packer.Options.GroupMode, i), ImageFormat.Png);
                 }
             }
         }

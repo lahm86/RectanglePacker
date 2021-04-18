@@ -81,10 +81,13 @@ namespace RectanglePackerWindow.Model
                 TileWidth = tileWidth,
                 TileHeight = tileHeight,
                 MaximumTiles = maxTiles,
-                FillMode = fillMode,
-                OrderMode = orderMode,
-                Order = order,
-                GroupMode = groupMode
+                Options = new PackingOptions
+                {
+                    FillMode = fillMode,
+                    OrderMode = orderMode,
+                    Order = order,
+                    GroupMode = groupMode
+                }
             };
             _packer.AddRectangles(_rectangles);
             _packer.RectanglePositioned += Packer_RectanglePositioned;
