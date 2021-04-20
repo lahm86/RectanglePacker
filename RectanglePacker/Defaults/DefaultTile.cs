@@ -1,4 +1,5 @@
 ﻿using RectanglePacker.Organisation;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -138,10 +139,20 @@ namespace RectanglePacker.Defaults
             return false;
         }
 
-        public Rectangle GetOccupiedRegion(Graphics g)
+        public Rectangle GetOccupiedRegion()
         {
-            RectangleF rect = _occupiedRegion.GetBounds(g);
-            return new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
+            // Get the segment with the biggest x value and add its width; get the segment with the biggest y value and add its height.
+            // Create a new rectangle from 0,0 to the max point. This makes sure that while whitespace is clipped, required whitespace 
+            // within boundary segments is retained.
+
+            int maxX = 0, maxY = 0;
+            foreach (R r in _rectangles)
+            {
+                maxX = Math.Max(maxX, r.MappedX + r.Bounds.Width);
+                maxY = Math.Max(maxY, r.MappedY + r.Bounds.Height);
+            }
+
+            return new Rectangle(0, 0, maxX, maxY);
         }
     }
 }
