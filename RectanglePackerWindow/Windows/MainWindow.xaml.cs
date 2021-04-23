@@ -186,6 +186,7 @@ namespace RectanglePackerWindow.Windows
             }
             finally
             {
+                Dispatcher.Invoke(new Action(() => _timeLabel.Content = _rectangleProvider.GetProcessingTime().ToString()));
                 Dispatcher.Invoke(new Action(() => SetWindowEnabled(true)));
             }
         }

@@ -16,5 +16,6 @@ namespace RectanglePackerWindow.Model
         void LoadRectangles(List<Size> sizes, bool shuffle = false);
         void ResetRectangles();
         void Pack(int tileWidth, int tileHeight, int maxTiles, PackingFillMode fillMode, PackingOrderMode orderMode, PackingOrder order, PackingGroupMode groupMode);
+        TimeSpan GetProcessingTime();
     }
 }

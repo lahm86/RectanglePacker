@@ -21,7 +21,7 @@ namespace RectanglePacker.Defaults
 
         protected readonly List<R> _rectangles;
 
-        protected Region _occupiedRegion;
+        protected OccupiedRegion _occupiedRegion;
 
         public DefaultTile()
         {
@@ -51,12 +51,12 @@ namespace RectanglePacker.Defaults
             int maxX = Width - rectangle.Bounds.Width;
             int maxY = Height - rectangle.Bounds.Height;
 
-            Point p = new Point(0, 0);
+            Point p = _occupiedRegion.GetFirstFreeHorizontalPoint();
             while (p.Y <= maxY)
             {
                 while (p.X <= maxX)
                 {
-                    if (!_occupiedRegion.IsVisible(p) && Add(rectangle, p.X, p.Y))
+                    if (Add(rectangle, p.X, p.Y))
                     {
                         return true;
                     }
@@ -74,12 +74,12 @@ namespace RectanglePacker.Defaults
             int maxX = Width - rectangle.Bounds.Width;
             int maxY = Height - rectangle.Bounds.Height;
 
-            Point p = new Point(0, 0);
+            Point p = _occupiedRegion.GetFirstFreeVerticalPoint();
             while (p.X <= maxX)
             {
                 while (p.Y <= maxY)
                 {
-                    if (!_occupiedRegion.IsVisible(p) && Add(rectangle, p.X, p.Y))
+                    if (Add(rectangle, p.X, p.Y))
                     {
                         return true;
                     }
@@ -97,9 +97,10 @@ namespace RectanglePacker.Defaults
             Rectangle mappedRect = new Rectangle(x, y, rectangle.Bounds.Width, rectangle.Bounds.Height);
             if (_occupiedRegion == null)
             {
-                _occupiedRegion = new Region(mappedRect);
+                _occupiedRegion = new OccupiedRegion(Width, Height);
+                _occupiedRegion.Add(mappedRect);
             }
-            else if (_occupiedRegion.IsVisible(mappedRect))
+            else if (!_occupiedRegion.CanFit(mappedRect))
             {
                 return false;
             }
@@ -117,7 +118,7 @@ namespace RectanglePacker.Defaults
             UsedSpace += rectangle.Area;
             if (_rectangles.Count > 1)
             {
-                _occupiedRegion.Union(mappedRectangle);
+                _occupiedRegion.Add(mappedRectangle);
             }
         }
 
@@ -132,7 +133,7 @@ namespace RectanglePacker.Defaults
                 }
                 else
                 {
-                    _occupiedRegion.Exclude(new Rectangle(rectangle.MappedX, rectangle.MappedY, rectangle.Bounds.Width, rectangle.Bounds.Height));
+                    _occupiedRegion.Remove(new Rectangle(rectangle.MappedX, rectangle.MappedY, rectangle.Bounds.Width, rectangle.Bounds.Height));
                 }
                 return true;
             }

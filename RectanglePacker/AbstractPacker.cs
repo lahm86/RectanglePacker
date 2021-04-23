@@ -76,6 +76,17 @@ namespace RectanglePacker
                 throw new ArgumentException("There are no rectangles to pack.");
             }
 
+            int areaRequired = 0;
+            foreach (R rectangle in _rectangles)
+            {
+                areaRequired += rectangle.Area;
+            }
+            
+            if (areaRequired > TotalFreeSpace)
+            {
+                throw new InvalidOperationException(string.Format("There is not enough free space to pack the given rectangles (required: {0}, available: {1}).", areaRequired, TotalFreeSpace));
+            }
+
             foreach (T tile in _tiles)
             {
                 tile.PackingStarted();

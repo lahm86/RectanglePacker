@@ -27,6 +27,7 @@ namespace RectanglePackerWindow.Model
         public List<IRectangle> Rectangles => _rectangles.Cast<IRectangle>().ToList();
 
         private UIGraphicPacker _packer;
+        private PackingResult<DefaultTile<UIGraphic>, UIGraphic> _result;
 
         public event EventHandler<RectanglePositionedEventArgs> RectanglePositioned;
 
@@ -94,11 +95,16 @@ namespace RectanglePackerWindow.Model
             };
             _packer.AddRectangles(_rectangles);
             _packer.RectanglePositioned += Packer_RectanglePositioned;
-            PackingResult<DefaultTile<UIGraphic>, UIGraphic> result = _packer.Pack();
-            if (result.OrphanCount > 0)
+            _result = _packer.Pack();
+            if (_result.OrphanCount > 0)
             {
                 throw new Exception("At least one rectangle could not be positioned.");
             }
+        }
+
+        public TimeSpan GetProcessingTime()
+        {
+            return _result.PackingTime;
         }
 
         private void Packer_RectanglePositioned(object sender, RectanglePositionEventArgs<DefaultTile<UIGraphic>, UIGraphic> e)

@@ -49,6 +49,7 @@
     <Compile Include="Comparison\WidthComparer.cs" />
     <Compile Include="Defaults\DefaultPacker.cs" />
     <Compile Include="Defaults\DefaultRectangle.cs" />
+    <Compile Include="Defaults\OccupiedRegion.cs" />
     <Compile Include="ITile.cs" />
     <Compile Include="AbstractPacker.cs" />
     <Compile Include="Events\PackingResult.cs" />

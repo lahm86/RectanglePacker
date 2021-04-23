@@ -17,6 +17,44 @@ namespace RectanglePackerSample
 
         static void Main()
         {
+            List<DefaultRectangle> rectangles = new List<DefaultRectangle>
+            {
+                //new DefaultRectangle(0, 0, 2, 6),
+                //new DefaultRectangle(0, 0, 2, 6),
+                //new DefaultRectangle(0, 0, 2, 6)
+                new DefaultRectangle(0, 0, 4, 4),
+                new DefaultRectangle(0, 0, 4, 4),
+                new DefaultRectangle(0, 0, 2, 10),
+                new DefaultRectangle(0, 0, 4, 2),
+                new DefaultRectangle(0, 0, 4, 2),
+                new DefaultRectangle(0, 0, 4, 2),
+                new DefaultRectangle(0, 0, 4, 2),
+                new DefaultRectangle(0, 0, 4, 2),
+                new DefaultRectangle(0, 0, 4, 2)
+            };
+
+            _sample = new PackerSample
+            {
+                Rectangles = rectangles
+            };
+            _sample.Packer.TileWidth = 10;
+            _sample.Packer.TileHeight = 10;
+            _sample.Packer.MaximumTiles = 16;
+            _sample.Packer.Options = new PackingOptions
+            {
+                FillMode = PackingFillMode.Horizontal,
+                OrderMode = PackingOrderMode.Width,
+                Order = PackingOrder.Descending,
+                GroupMode = PackingGroupMode.None
+            };
+            _sample.Pack();
+
+            var tiles = _sample.Packer.Tiles;
+            int j = 0;
+        }
+
+        static void Main2()
+        {
             _resultData = new StringBuilder();
             _resultData.Append("# Rectangles,Fill Mode,Packing Order Mode,Packing Order,Group Mode,Time,Tiles,Space Occupied,Tile Occupation");
 

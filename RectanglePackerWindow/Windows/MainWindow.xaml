@@ -238,6 +238,9 @@
                         Grid.ColumnSpan="2"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
+                        <Label x:Name="_timeLabel"
+                               VerticalAlignment="Bottom"
+                               Margin="0,0,10,0"/>
                         <Button
                             Margin="0,10,10,0"
                             Width="60"
