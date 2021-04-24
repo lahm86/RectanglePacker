@@ -11,6 +11,7 @@ namespace RectanglePacker
         protected readonly List<T> _tiles;
         protected readonly List<R> _rectangles, _orphanedRectangles;
 
+        public bool AllowEmptyPacking { get; set; }
         public int TotalRectangles => _rectangles.Count;
         public int TotalTiles => _tiles == null ? 0 : _tiles.Count;
         public int TotalSpace => TileWidth * TileHeight * MaximumTiles;
@@ -32,6 +33,7 @@ namespace RectanglePacker
             _tiles = new List<T>();
             _rectangles = new List<R>();
             _orphanedRectangles = new List<R>();
+            AllowEmptyPacking = false;
             Options = new PackingOptions();
             MaximumTiles = 0;
             TileWidth = 0;
@@ -71,7 +73,7 @@ namespace RectanglePacker
                 throw new ArgumentException("Tile height is <= 0 - packing cannot begin.");
             }
 
-            if (_rectangles.Count == 0)
+            if (_rectangles.Count == 0 && !AllowEmptyPacking)
             {
                 throw new ArgumentException("There are no rectangles to pack.");
             }
