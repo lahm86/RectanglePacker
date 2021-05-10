@@ -23,10 +23,13 @@ namespace RectanglePacker.Defaults
 
         protected OccupiedRegion _occupiedRegion;
 
+        protected bool _allowOverlapping;
+
         public DefaultTile()
         {
             _rectangles = new List<R>();
             UsedSpace = 0;
+            _allowOverlapping = false;
         }
 
         public virtual void PackingStarted() { }
@@ -100,7 +103,7 @@ namespace RectanglePacker.Defaults
                 _occupiedRegion = new OccupiedRegion(Width, Height);
                 _occupiedRegion.Add(mappedRect);
             }
-            else if (!_occupiedRegion.CanFit(mappedRect))
+            else if (!_allowOverlapping && !_occupiedRegion.CanFit(mappedRect))
             {
                 return false;
             }
