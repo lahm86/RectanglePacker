@@ -1,5 +1,5 @@
 # RectanglePacker
-RectanglePacker provides a solution to the bin-packing problem. Given a finite number of bins, and a collections of items to add to them, RectanglePacker attempts to fill the bins using as little space as possible. The solution is currently targeted at rectangles and squares only.
+RectanglePacker provides a solution to the bin-packing problem. Given a finite number of bins, and a collection of items to add to them, RectanglePacker attempts to fill the bins using as little space as possible. The solution currently supports packing of rectangles and squares only.
 
 # Usage
 This application uses a MIT license as described in the LICENSE file. Follow the steps below to download and use the application.
