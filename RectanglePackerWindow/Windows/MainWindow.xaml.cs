@@ -179,6 +179,7 @@ namespace RectanglePackerWindow.Windows
             try
             {
                 _rectangleProvider.Pack(tileWidth, tileHeight, maxTiles, fillMode, orderMode, order, groupMode);
+                Dispatcher.Invoke(new Action(() => _timeLabel.Content = _rectangleProvider.GetProcessingTime().ToString()));
             }
             catch (Exception e)
             {
@@ -186,7 +187,6 @@ namespace RectanglePackerWindow.Windows
             }
             finally
             {
-                Dispatcher.Invoke(new Action(() => _timeLabel.Content = _rectangleProvider.GetProcessingTime().ToString()));
                 Dispatcher.Invoke(new Action(() => SetWindowEnabled(true)));
             }
         }
