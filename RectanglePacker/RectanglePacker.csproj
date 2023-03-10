@@ -1,68 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AA641810-6DC5-40F7-B3BC-C7A15502C82A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RectanglePacker</RootNamespace>
-    <AssemblyName>RectanglePacker</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
+    <TargetFramework>net472</TargetFramework>
     <WarningLevel>4</WarningLevel>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Version>1.0.0</Version>
+    <Product>RectanglePacker Core Library</Product>
+    <Copyright>Copyright © Tomb Raider Community 2023</Copyright>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Comparison\AreaComparer.cs" />
-    <Compile Include="Comparison\HeightComparer.cs" />
-    <Compile Include="Comparison\PerimiterComparer.cs" />
-    <Compile Include="Comparison\SquareComparer.cs" />
-    <Compile Include="Comparison\WidthComparer.cs" />
-    <Compile Include="Defaults\DefaultPacker.cs" />
-    <Compile Include="Defaults\DefaultRectangle.cs" />
-    <Compile Include="Defaults\OccupiedRegion.cs" />
-    <Compile Include="ITile.cs" />
-    <Compile Include="AbstractPacker.cs" />
-    <Compile Include="Events\PackingResult.cs" />
-    <Compile Include="Organisation\PackingFillMode.cs" />
-    <Compile Include="Organisation\PackingGroupMode.cs" />
-    <Compile Include="Organisation\PackingOptions.cs" />
-    <Compile Include="Organisation\PackingOrderMode.cs" />
-    <Compile Include="Organisation\PackingOrder.cs" />
-    <Compile Include="Events\RectanglePositionEventArgs.cs" />
-    <Compile Include="Defaults\DefaultTile.cs" />
-    <Compile Include="IRectangle.cs" />
-    <Compile Include="Organisation\PackingStartMethod.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
