@@ -1,9 +1,8 @@
-﻿namespace RectanglePacker.Organisation
+﻿namespace RectanglePacker.Organisation;
+
+public enum PackingStartMethod
 {
-    public enum PackingStartMethod
-    {
-        FirstTile,
-        EndTile,
-        NewEndTile
-    }
+    FirstTile,
+    EndTile,
+    NewEndTile
 }

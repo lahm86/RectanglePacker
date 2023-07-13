@@ -1,8 +1,7 @@
-﻿namespace RectanglePacker.Organisation
+﻿namespace RectanglePacker.Organisation;
+
+public enum PackingFillMode
 {
-    public enum PackingFillMode
-    {
-        Horizontal,
-        Vertical
-    }
+    Horizontal,
+    Vertical
 }
