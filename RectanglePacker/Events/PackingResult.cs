@@ -1,39 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace RectanglePacker.Events;
 
-namespace RectanglePacker.Events
+public class PackingResult<T, R>
+    where T : class, ITile<R>
+    where R : class, IRectangle
 {
-    public class PackingResult<T, R> where T : class, ITile<R> where R : class, IRectangle
+    public AbstractPacker<T, R> Packer { get; private set; }
+    public double TotalSpaceOccupation { get; private set; }
+    public int UsedTileCount => Packer.Tiles.Count;
+    public int OrphanCount => Packer.OrphanedRectangles.Count;
+    public TimeSpan PackingTime { get; private set; }
+
+    private DateTime _startTime;
+
+    internal PackingResult(AbstractPacker<T, R> packer)
     {
-        public AbstractPacker<T, R> Packer { get; private set; }
-        public double TotalSpaceOccupation { get; private set; }
-        public int UsedTileCount => Packer.Tiles.Count;
-        public int OrphanCount => Packer.OrphanedRectangles.Count;
-        public TimeSpan PackingTime { get; private set; }
+        Packer = packer;
+    }
 
-        private DateTime _startTime;
+    internal void BeginTimer()
+    {
+        _startTime = DateTime.Now;
+    }
 
-        internal PackingResult(AbstractPacker<T, R> packer)
+    internal void EndTimer()
+    {
+        PackingTime = DateTime.Now.Subtract(_startTime);
+        int spaceUsed = 0;
+        IReadOnlyList<T> tiles = Packer.Tiles;
+        for (int i = 0; i < tiles.Count; i++)
         {
-            Packer = packer;
+            T tile = tiles[i];
+            spaceUsed += tile.UsedSpace;
         }
-
-        internal void BeginTimer()
-        {
-            _startTime = DateTime.Now;
-        }
-
-        internal void EndTimer()
-        {
-            PackingTime = DateTime.Now.Subtract(_startTime);
-            int spaceUsed = 0;
-            IReadOnlyList<T> tiles = Packer.Tiles;
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                T tile = tiles[i];
-                spaceUsed += tile.UsedSpace;
-            }
-            TotalSpaceOccupation = Math.Round(100 * (double)spaceUsed / (tiles[0].Area * tiles.Count), 2);
-        }
+        TotalSpaceOccupation = Math.Round(100 * (double)spaceUsed / (tiles[0].Area * tiles.Count), 2);
     }
 }

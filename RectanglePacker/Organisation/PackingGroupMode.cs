@@ -1,8 +1,7 @@
-﻿namespace RectanglePacker.Organisation
+﻿namespace RectanglePacker.Organisation;
+
+public enum PackingGroupMode
 {
-    public enum PackingGroupMode
-    {
-        None,
-        Squares
-    }
+    None,
+    Squares
 }

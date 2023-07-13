@@ -1,10 +1,9 @@
-﻿namespace RectanglePacker.Organisation
+﻿namespace RectanglePacker.Organisation;
+
+public enum PackingOrderMode
 {
-    public enum PackingOrderMode
-    {
-        Width,
-        Height,
-        Area,
-        Perimiter
-    }
+    Width,
+    Height,
+    Area,
+    Perimiter
 }

@@ -1,10 +1,9 @@
-﻿namespace RectanglePacker.Defaults
+﻿namespace RectanglePacker.Defaults;
+
+public class DefaultPacker : AbstractPacker<DefaultTile<DefaultRectangle>, DefaultRectangle>
 {
-    public class DefaultPacker : AbstractPacker<DefaultTile<DefaultRectangle>, DefaultRectangle>
+    protected override DefaultTile<DefaultRectangle> CreateTile()
     {
-        protected override DefaultTile<DefaultRectangle> CreateTile()
-        {
-            return new DefaultTile<DefaultRectangle>();
-        }
+        return new DefaultTile<DefaultRectangle>();
     }
 }

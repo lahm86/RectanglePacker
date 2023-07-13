@@ -4,15 +4,6 @@ RectanglePacker provides a solution to the bin-packing problem. Given a finite n
 # Usage
 This application uses a MIT license as described in the LICENSE file. Follow the steps below to download and use the application.
 
-_Prerequisites_
-* Windows 7 SP1, Windows 8.1, Windows 10
-* .NET Framework 4.7.2
-
-_Install Steps_
-* Download the latest release from https://github.com/lahm86/RectanglePacker/releases
-* Extract the zip file to any location on your PC.
-
-### Library
 To use RectanglePacker in your own solution, after making a reference to RectanglePacker.dll:
 
 * Implement `IRectangle` in your solution to use as the basis for the rectangles you wish to pack. Alternatively, simply use or extend `DefaultRectangle`.
@@ -40,13 +31,3 @@ The following options can be configured to change the packing behaviour.
   * `FirstTile` - packing will begin on the first tile.
   * `EndTile` - packing will begin on the last occupied tile - this and the following option are useful for speed if the tiles have pre-filled content.
   * `NewEndTile` - if there is available space for a new tile, this will be added and packing will commence here.
-
-## User Interface
-The UI provides a visual representation of how packing is carried out, and allows you to test the best combination of options for your particular problem. Use the File menu to:
-* **Generate Rectangles** - you can specify a number of rectangles to generate automatically.
-* **Import Rectangles** - choose a JSON file that contains an array of [Width, Height] values. See SampleData\SampleSizes.json in the provided solution.
-* **Import Images** - choose a list of image files. The UI solution contains an extension of `DefaultRectangle` to support images.
-
-Following is a packing demo.
-
-![UI Packing Demo](https://github.com/lahm86/RectanglePacker/blob/main/Resources/PackingDemo.gif)

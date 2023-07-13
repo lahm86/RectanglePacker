@@ -1,8 +1,7 @@
-﻿namespace RectanglePacker.Organisation
+﻿namespace RectanglePacker.Organisation;
+
+public enum PackingOrder
 {
-    public enum PackingOrder
-    {
-        Ascending,
-        Descending
-    }
+    Ascending,
+    Descending
 }
