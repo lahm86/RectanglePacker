@@ -18,18 +18,11 @@ public class DefaultTile<R> : ITile<R>
 
     public IReadOnlyList<R> Rectangles => _rectangles;
 
-    protected readonly List<R> _rectangles;
+    protected readonly List<R> _rectangles = [];
 
     protected OccupiedRegion _occupiedRegion;
 
     protected bool _allowOverlapping;
-
-    public DefaultTile()
-    {
-        _rectangles = new List<R>();
-        UsedSpace = 0;
-        _allowOverlapping = false;
-    }
 
     public virtual void PackingStarted() { }
 

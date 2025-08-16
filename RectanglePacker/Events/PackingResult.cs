@@ -1,10 +1,10 @@
 ﻿namespace RectanglePacker.Events;
 
 public class PackingResult<T, R>
-    where T : class, ITile<R>
+    where T : class, ITile<R>, new()
     where R : class, IRectangle
 {
-    public AbstractPacker<T, R> Packer { get; private set; }
+    public BasePacker<T, R> Packer { get; private set; }
     public double TotalSpaceOccupation { get; private set; }
     public int UsedTileCount => Packer.Tiles.Count;
     public int OrphanCount => Packer.OrphanedRectangles.Count;
@@ -12,7 +12,7 @@ public class PackingResult<T, R>
 
     private DateTime _startTime;
 
-    internal PackingResult(AbstractPacker<T, R> packer)
+    internal PackingResult(BasePacker<T, R> packer)
     {
         Packer = packer;
     }

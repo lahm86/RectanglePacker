@@ -4,12 +4,13 @@ using RectanglePacker.Organisation;
 
 namespace RectanglePacker;
 
-public abstract class AbstractPacker<T, R>
-    where T : class, ITile<R>
+public class BasePacker<T, R>
+    where T : class, ITile<R>, new()
     where R : class, IRectangle
 {
-    protected readonly List<T> _tiles;
-    protected readonly List<R> _rectangles, _orphanedRectangles;
+    protected readonly List<T> _tiles = [];
+    protected readonly List<R> _rectangles = [];
+    protected readonly List<R> _orphanedRectangles = [];
 
     public bool AllowEmptyPacking { get; set; }
     public int TotalRectangles => _rectangles.Count;
@@ -20,25 +21,12 @@ public abstract class AbstractPacker<T, R>
     public int MaximumTiles { get; set; }
     public int TileWidth { get; set; }
     public int TileHeight { get; set; }
-    
-    public PackingOptions Options { get; set; }
+    public PackingOptions Options { get; set; } = new();
 
     public IReadOnlyList<T> Tiles => _tiles;
     public IReadOnlyList<R> OrphanedRectangles => _orphanedRectangles;
 
     public event EventHandler<RectanglePositionEventArgs<T, R>> RectanglePositioned;
-
-    public AbstractPacker()
-    {
-        _tiles = new List<T>();
-        _rectangles = new List<R>();
-        _orphanedRectangles = new List<R>();
-        AllowEmptyPacking = false;
-        Options = new PackingOptions();
-        MaximumTiles = 0;
-        TileWidth = 0;
-        TileHeight = 0;
-    }
 
     public void AddRectangle(R rectangle)
     {
@@ -101,7 +89,7 @@ public abstract class AbstractPacker<T, R>
 
         _orphanedRectangles.Clear();
 
-        List<R> queue = new(_rectangles);
+        List<R> queue = [.. _rectangles];
 
         if (Options.StartMethod != PackingStartMethod.FirstTile)
         {
@@ -145,22 +133,24 @@ public abstract class AbstractPacker<T, R>
 
         if (Options.GroupMode == PackingGroupMode.Squares)
         {
-            Dictionary<int, List<R>> squareMap = new();
+            Dictionary<int, List<R>> squareMap = [];
             for (int i = _rectangles.Count - 1; i >= 0; i--)
             {
                 R r = _rectangles[i];
                 if (r.Bounds.Width == r.Bounds.Height)
                 {
-                    if (!squareMap.ContainsKey(r.Area))
+                    if (!squareMap.TryGetValue(r.Area, out List<R> value))
                     {
-                        squareMap[r.Area] = new List<R>();
+                        value = [];
+                        squareMap[r.Area] = value;
                     }
-                    squareMap[r.Area].Add(r);
+
+                    value.Add(r);
                     _rectangles.RemoveAt(i);
                 }
             }
 
-            List<int> areaKeys = new(squareMap.Keys);
+            List<int> areaKeys = [.. squareMap.Keys];
             areaKeys.Sort();
             if (Options.Order == PackingOrder.Ascending)
             {
@@ -192,8 +182,6 @@ public abstract class AbstractPacker<T, R>
         return false;
     }
 
-    protected abstract T CreateTile();
-
     protected void AddTiles(uint count = 1)
     {
         for (int i = 0; i < count; i++)
@@ -204,12 +192,14 @@ public abstract class AbstractPacker<T, R>
 
     protected T AddTile()
     {
-        T newTile = CreateTile();
+        T newTile = new()
+        {
+            Index = _tiles.Count,
+            Width = TileWidth,
+            Height = TileHeight,
+            FillMode = Options.FillMode
+        };
         _tiles.Add(newTile);
-        newTile.Index = _tiles.Count - 1;
-        newTile.Width = TileWidth;
-        newTile.Height = TileHeight;
-        newTile.FillMode = Options.FillMode;
         return newTile;
     }
 
@@ -241,12 +231,5 @@ public abstract class AbstractPacker<T, R>
     }
 
     protected int GetTotalUsedSpace()
-    {
-        int total = 0;
-        foreach (T tile in _tiles)
-        {
-            total += tile.UsedSpace;
-        }
-        return total;
-    }
+        => _tiles.Sum(t => t.UsedSpace);
 }
