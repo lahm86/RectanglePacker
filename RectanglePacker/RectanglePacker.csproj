@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <Product>RectanglePacker Core Library</Product>
-    <Copyright>Copyright © Tomb Raider Community 2023</Copyright>
+    <Copyright>Copyright © Tomb Raider Community 2025</Copyright>
   </PropertyGroup>
 </Project>
